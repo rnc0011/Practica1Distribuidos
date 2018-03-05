@@ -14,7 +14,7 @@ public class GameClientImpl {
 
 	// Declaración de variables
 	private String server;
-	private int port = 1500;
+	private static int port = 1500;
 	private String user;
 
 	/**
@@ -63,12 +63,12 @@ public class GameClientImpl {
 
 		if (args.length == 1) {
 			String usuario = args[0];
-			GameClientImpl cliente = new GameClientImpl("localhost", 1500, usuario);
+			GameClientImpl cliente = new GameClientImpl("localhost", port, usuario);
 			cliente.start();
 		} else if (args.length == 2) {
 			String hostName = args[0];
 			String usuario = args[1];
-			GameClientImpl cliente = new GameClientImpl(hostName, 1500, usuario);
+			GameClientImpl cliente = new GameClientImpl(hostName, port, usuario);
 			cliente.start();
 		}
 
