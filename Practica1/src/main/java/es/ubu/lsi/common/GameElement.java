@@ -1,6 +1,6 @@
 package es.ubu.lsi.common;
 
-
+//Probando, probando
 import java.io.Serializable;
 
 /**
