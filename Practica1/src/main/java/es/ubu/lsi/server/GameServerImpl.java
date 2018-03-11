@@ -10,7 +10,7 @@ import es.ubu.lsi.common.GameElement;
  * @version 1.0
  *
  */
-public class GameServerImpl {
+public class GameServerImpl implements GameServer{
 
 	/**
 	 * Constructor de la clase GameServerImpl.
@@ -40,7 +40,7 @@ public class GameServerImpl {
 	 * 
 	 * @param element
 	 */
-	public void broadcastRomm(GameElement element) {
+	public void broadcastRoom(GameElement element) {
 
 	}
 

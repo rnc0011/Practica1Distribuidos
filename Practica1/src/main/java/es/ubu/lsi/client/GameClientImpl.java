@@ -1,5 +1,9 @@
 package es.ubu.lsi.client;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import es.ubu.lsi.common.GameElement;
 
 /**
@@ -10,12 +14,15 @@ import es.ubu.lsi.common.GameElement;
  * @version 1.0
  *
  */
-public class GameClientImpl {
+public class GameClientImpl implements GameClient {
 
 	// Declaración de variables
 	private String server;
 	private static int port = 1500;
 	private String user;
+	private Socket socket;
+	private ObjectOutputStream salida;
+	private ObjectInputStream entrada;
 
 	/**
 	 * Constructor de la clase GameClientImpl.
@@ -44,7 +51,11 @@ public class GameClientImpl {
 	 * @param element
 	 */
 	public void sendElement(GameElement element) {
-
+		try {
+			salida.writeObject(element);
+		} catch (IOException e) {
+			disconnect();
+		}
 	}
 
 	/**
@@ -88,6 +99,14 @@ public class GameClientImpl {
 		 * Método run.
 		 */
 		public void run() {
+			while(true) {
+				try {
+					System.out.println("mensaje del servidor");
+				} catch (IOException e) {
+					System.out.println("ERROR");
+					disconnect();
+				}
+			}
 
 		}
 
