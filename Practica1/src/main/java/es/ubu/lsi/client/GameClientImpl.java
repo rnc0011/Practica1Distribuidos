@@ -18,7 +18,7 @@ public class GameClientImpl implements GameClient {
 
 	// Declaración de variables
 	private String server;
-	private static int port = 1500;
+	private final static int port = 1500;
 	private String user;
 	private Socket socket;
 	private ObjectOutputStream salida;
@@ -71,17 +71,19 @@ public class GameClientImpl implements GameClient {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		GameClientImpl cliente = null;
 
 		if (args.length == 1) {
 			String usuario = args[0];
-			GameClientImpl cliente = new GameClientImpl("localhost", port, usuario);
-			cliente.start();
+			cliente = new GameClientImpl("localhost", port, usuario);
 		} else if (args.length == 2) {
 			String hostName = args[0];
 			String usuario = args[1];
-			GameClientImpl cliente = new GameClientImpl(hostName, port, usuario);
-			cliente.start();
+			cliente = new GameClientImpl(hostName, port, usuario);
+		} else {
+			throw new IllegalArgumentException("Se deben introducir 1 o 2 argumentos.");
 		}
+		cliente.start();
 
 	}
 
