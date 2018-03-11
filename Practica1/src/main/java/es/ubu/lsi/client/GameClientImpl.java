@@ -79,7 +79,11 @@ public class GameClientImpl implements GameClient {
 	 * Método disconnect.
 	 */
 	public void disconnect() {
-
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -101,6 +105,7 @@ public class GameClientImpl implements GameClient {
 			throw new IllegalArgumentException("Se deben introducir 1 o 2 argumentos.");
 		}
 		cliente.start();
+		
 
 	}
 
@@ -117,15 +122,17 @@ public class GameClientImpl implements GameClient {
 		/**
 		 * Método run.
 		 */
+		@Override
 		public void run() {
-			while(true) {
+			boolean running = true;
+			while(running) {
 				try {
 					System.out.println("El servidor dice: " + entrada.readObject().toString());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
 					disconnect();
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (IOException e2) {
+					e2.printStackTrace();
 					disconnect();
 				}
 			}
