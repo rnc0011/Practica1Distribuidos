@@ -101,7 +101,7 @@ public class GameClientImpl implements GameClient {
 		public void run() {
 			while(true) {
 				try {
-					System.out.println(entrada.readObject().toString());
+					System.out.println("El servidor dice: " + entrada.readObject().toString());
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 					disconnect();
