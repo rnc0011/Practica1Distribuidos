@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Scanner;
+
+import es.ubu.lsi.common.ElementType;
 import es.ubu.lsi.common.GameElement;
 
 /**
@@ -20,6 +23,7 @@ public class GameClientImpl implements GameClient {
 	private String server;
 	private final static int port = 1500;
 	private String user;
+	private static int id = 0;
 	private Socket socket;
 	private ObjectOutputStream salida;
 	private ObjectInputStream entrada;
@@ -34,6 +38,7 @@ public class GameClientImpl implements GameClient {
 	public GameClientImpl(String server, int port, String username) {
 		this.server = server;
 		this.user = username;
+		this.id += 1;
 	}
 
 	/**
@@ -89,6 +94,7 @@ public class GameClientImpl implements GameClient {
 	 */
 	public static void main(String[] args) {
 		GameClientImpl cliente = null;
+		GameElement elemento = null;
 
 		if (args.length == 1) {
 			String usuario = args[0];
@@ -100,8 +106,32 @@ public class GameClientImpl implements GameClient {
 		} else {
 			throw new IllegalArgumentException("Se deben introducir 1 o 2 argumentos.");
 		}
+		
 		cliente.start();
-
+		
+		Scanner scanner = new Scanner(System.in);
+		String jugada = scanner.nextLine();
+		
+		if (jugada.equalsIgnoreCase(ElementType.PAPEL.toString())) {
+			elemento = new GameElement(id, ElementType.PAPEL);
+			cliente.sendElement(elemento);
+		} else if (jugada.equalsIgnoreCase(ElementType.PIEDRA.toString())) {
+			elemento = new GameElement(id, ElementType.PIEDRA);
+			cliente.sendElement(elemento);
+		} else if (jugada.equalsIgnoreCase(ElementType.TIJERA.toString())) {
+			elemento = new GameElement(id, ElementType.TIJERA);
+			cliente.sendElement(elemento);
+		} else if (jugada.equalsIgnoreCase(ElementType.LOGOUT.toString())) {
+			elemento = new GameElement(id, ElementType.LOGOUT);
+			cliente.sendElement(elemento);
+		} else if (jugada.equalsIgnoreCase(ElementType.SHUTDOWN.toString())) {
+			elemento = new GameElement(id, ElementType.SHUTDOWN);
+			cliente.sendElement(elemento);
+		} else {
+			System.out.println("La jugada no es válida.");
+		}
+		
+		scanner.close();
 	}
 
 	/**
@@ -129,7 +159,6 @@ public class GameClientImpl implements GameClient {
 					disconnect();
 				}
 			}
-
 		}
 
 	}
