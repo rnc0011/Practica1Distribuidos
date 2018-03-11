@@ -42,7 +42,23 @@ public class GameClientImpl implements GameClient {
 	 * @return
 	 */
 	public boolean start() {
-
+		boolean flag;
+		
+		try {
+			socket = new Socket(server, port);
+			salida = new ObjectOutputStream(socket.getOutputStream());
+			entrada = new ObjectInputStream(socket.getInputStream());
+			salida.writeUTF("El usuario " + user + "se ha conectado.");
+			GameClientListener listener = new GameClientListener();
+			Thread hilo = new Thread(listener);
+			flag = true;
+			hilo.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+			flag = false;
+		}
+		
+		return flag;
 	}
 
 	/**
@@ -54,6 +70,7 @@ public class GameClientImpl implements GameClient {
 		try {
 			salida.writeObject(element);
 		} catch (IOException e) {
+			e.printStackTrace();
 			disconnect();
 		}
 	}
