@@ -38,7 +38,7 @@ public class GameClientImpl implements GameClient {
 	public GameClientImpl(String server, int port, String username) {
 		this.server = server;
 		this.user = username;
-		this.id += 1;
+		GameClientImpl.id++;
 	}
 
 	/**
