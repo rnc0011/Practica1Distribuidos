@@ -56,10 +56,10 @@ public class GameServerImpl implements GameServer {
 				}
 				salida = new ObjectOutputStream(clientSocket.getOutputStream());
 				entrada = new ObjectInputStream(clientSocket.getInputStream());
-				/*ChatServerThreadForClient chat = new ChatServerThreadForClient();
+				ChatServerThreadForClient chat = new ChatServerThreadForClient();
 				Thread hilo = new Thread(chat);
 				hilos.add(hilo);
-				hilo.start();*/
+				hilo.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

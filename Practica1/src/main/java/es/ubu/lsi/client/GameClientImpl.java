@@ -72,7 +72,8 @@ public class GameClientImpl implements GameClient {
 	/**
 	 * Método sendElement. Manda la jugada al servidor.
 	 * 
-	 * @param element jugada a mandar
+	 * @param element
+	 *            jugada a mandar
 	 */
 	public void sendElement(GameElement element) {
 		try {
