@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import es.ubu.lsi.common.ElementType;
 import es.ubu.lsi.common.GameElement;
 
 /**
@@ -131,7 +132,15 @@ public class GameServerImpl implements GameServer {
 		 * Método run.
 		 */
 		public void run() {
-
+			while (true) {
+				try {
+					broadcastRoom((GameElement) entrada.readObject());
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 	}
