@@ -159,8 +159,7 @@ public class GameClientImpl implements GameClient {
 		 */
 		@Override
 		public void run() {
-			boolean running = true;
-			while (running) {
+			while (true) {
 				try {
 					System.out.println("El servidor dice: " + entrada.readObject().toString());
 				} catch (ClassNotFoundException e1) {
