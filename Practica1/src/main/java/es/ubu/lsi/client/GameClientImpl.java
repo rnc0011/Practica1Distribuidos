@@ -92,7 +92,8 @@ public class GameClientImpl implements GameClient {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Error al desconectarse");
+            System.exit(1);
 		}
 	}
 
