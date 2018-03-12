@@ -62,10 +62,11 @@ public class GameClientImpl implements GameClient {
 			Thread hilo = new Thread(listener);
 			flag = true;
 			hilo.start();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
 			flag = false;
-		}
+			System.err.println("Error al conectarse al servidor en el puerto:  " + port);
+            System.exit(1);
+        } 
 		return flag;
 	}
 
