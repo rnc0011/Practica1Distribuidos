@@ -1,5 +1,14 @@
 package es.ubu.lsi.server;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import es.ubu.lsi.common.GameElement;
 
 /**
@@ -10,7 +19,16 @@ import es.ubu.lsi.common.GameElement;
  * @version 1.0
  *
  */
-public class GameServerImpl implements GameServer{
+public class GameServerImpl implements GameServer {
+
+	final static int port = 1500;
+	private List<Integer> clientes = new ArrayList<Integer>();
+	private List<Thread> hilos = new ArrayList<Thread>();
+	private ServerSocket serverSocket = null;
+	private Socket clientSocket = null;
+	private ObjectOutputStream salida;
+	private ObjectInputStream entrada;
+	private List<Socket> socketClientes = new ArrayList<Socket>();
 
 	/**
 	 * Constructor de la clase GameServerImpl.
@@ -25,14 +43,40 @@ public class GameServerImpl implements GameServer{
 	 * Método startup.
 	 */
 	public void startup() {
-
+		while (true) {
+			try {
+				serverSocket = new ServerSocket(port);
+				try {
+					clientSocket = new Socket();
+					clientSocket = serverSocket.accept();
+					socketClientes.add(clientSocket);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				salida = new ObjectOutputStream(clientSocket.getOutputStream());
+				entrada = new ObjectInputStream(clientSocket.getInputStream());
+				ChatServerThreadForClient chat = new ChatServerThreadForClient();
+				Thread hilo = new Thread(chat);
+				hilos.add(hilo);
+				hilo.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
 	 * Método shutdow.
 	 */
 	public void shutdown() {
-
+		Iterator<Socket> it = socketClientes.iterator();
+		while (it.hasNext()) {
+			try {
+				it.next().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -50,7 +94,7 @@ public class GameServerImpl implements GameServer{
 	 * @param id
 	 */
 	public void remove(int id) {
-
+		clientes.remove(id);
 	}
 
 	/**
@@ -59,7 +103,8 @@ public class GameServerImpl implements GameServer{
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		GameServerImpl servidor = new GameServerImpl(port);
+		servidor.startup();
 	}
 
 	/**
