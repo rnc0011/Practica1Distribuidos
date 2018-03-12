@@ -49,16 +49,17 @@ public class GameServerImpl implements GameServer {
 				try {
 					clientSocket = new Socket();
 					clientSocket = serverSocket.accept();
+					System.out.println(clientSocket.getInputStream().toString());
 					socketClientes.add(clientSocket);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				salida = new ObjectOutputStream(clientSocket.getOutputStream());
 				entrada = new ObjectInputStream(clientSocket.getInputStream());
-				ChatServerThreadForClient chat = new ChatServerThreadForClient();
+				/*ChatServerThreadForClient chat = new ChatServerThreadForClient();
 				Thread hilo = new Thread(chat);
 				hilos.add(hilo);
-				hilo.start();
+				hilo.start();*/
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
