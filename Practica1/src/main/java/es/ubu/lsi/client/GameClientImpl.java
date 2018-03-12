@@ -42,18 +42,22 @@ public class GameClientImpl implements GameClient {
 	}
 
 	/**
-	 * Método start.
+	 * Método start. Inicializa la conexión con el servidor y arranca el hilo del
+	 * listener.
 	 * 
-	 * @return
+	 * @return true si no ha habido problemas, false en caso contrario
 	 */
 	public boolean start() {
 		boolean flag;
-		
 		try {
+			// Se crean el socket y los objetos que permiten la comunicación hacia/desde el
+			// servidor
 			socket = new Socket(server, port);
 			salida = new ObjectOutputStream(socket.getOutputStream());
 			entrada = new ObjectInputStream(socket.getInputStream());
 			salida.writeUTF("El usuario " + user + "se ha conectado.");
+
+			// Se crea el listener y se arranca el hilo
 			GameClientListener listener = new GameClientListener();
 			Thread hilo = new Thread(listener);
 			flag = true;
@@ -62,14 +66,13 @@ public class GameClientImpl implements GameClient {
 			e.printStackTrace();
 			flag = false;
 		}
-		
 		return flag;
 	}
 
 	/**
-	 * Método sendElement.
+	 * Método sendElement. Manda la jugada al servidor.
 	 * 
-	 * @param element
+	 * @param element jugada a mandar
 	 */
 	public void sendElement(GameElement element) {
 		try {
@@ -81,7 +84,7 @@ public class GameClientImpl implements GameClient {
 	}
 
 	/**
-	 * Método disconnect.
+	 * Método disconnect. Se cierra la conexión mediante el socket.
 	 */
 	public void disconnect() {
 		try {
@@ -92,7 +95,7 @@ public class GameClientImpl implements GameClient {
 	}
 
 	/**
-	 * Método main.
+	 * Método main. Programa principal del cliente.
 	 * 
 	 * @param args
 	 */
@@ -110,12 +113,12 @@ public class GameClientImpl implements GameClient {
 		} else {
 			throw new IllegalArgumentException("Se deben introducir 1 o 2 argumentos.");
 		}
-		
+
 		cliente.start();
-		
+
 		Scanner scanner = new Scanner(System.in);
 		String jugada = scanner.nextLine();
-		
+
 		if (jugada.equalsIgnoreCase(ElementType.PAPEL.toString())) {
 			elemento = new GameElement(id, ElementType.PAPEL);
 			cliente.sendElement(elemento);
@@ -134,7 +137,7 @@ public class GameClientImpl implements GameClient {
 		} else {
 			System.out.println("La jugada no es válida.");
 		}
-		
+
 		scanner.close();
 	}
 
@@ -149,12 +152,12 @@ public class GameClientImpl implements GameClient {
 	public class GameClientListener implements Runnable {
 
 		/**
-		 * Método run.
+		 * Método run. El listener va a escuchar constantemente al servidor.
 		 */
 		@Override
 		public void run() {
 			boolean running = true;
-			while(running) {
+			while (running) {
 				try {
 					System.out.println("El servidor dice: " + entrada.readObject().toString());
 				} catch (ClassNotFoundException e1) {
