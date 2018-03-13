@@ -41,16 +41,35 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<configuration>
-					<mainClass>es.ubu.lsi.client.GameClientImpl</mainClass>
-					<arguments>
-						<argument>localhost</argument>
-						<argument>2000</argument>
-					</arguments>
-				</configuration>
+				 <groupId>org.codehaus.mojo</groupId>
+		        <artifactId>exec-maven-plugin</artifactId>
+		        <version>1.2.1</version>
+		        <executions>
+		            <execution>
+		                <id>GameServerImpl</id>
+		                <goals>
+		                    <goal>java</goal>
+		                </goals>
+		                <configuration>
+		                    <mainClass>es.ubu.lsi.server.GameServerImpl</mainClass>
+		      				<arguments>
+								<argument>localhost</argument>
+								<argument>2000</argument>
+							</arguments>
+		                    <includePluginDependencies>false</includePluginDependencies>
+		                </configuration>
+		            </execution>
+		            <execution>
+		                <id>GameClientImpl</id>
+		                <goals>
+		                    <goal>java</goal>
+		                </goals>
+		                <configuration>
+		                    <mainClass>es.ubu.lsi.client.GameClientImpl</mainClass>
+		                    <includePluginDependencies>false</includePluginDependencies>
+		                </configuration>
+		            </execution>
+		        </executions>
 			</plugin>
 		</plugins>
 	</build>

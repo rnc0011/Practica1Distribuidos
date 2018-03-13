@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.main.mainClass="es.ubu.lsi.server.GameServerImpl" 
+mvn exec:java -Dexec.mainClass="es.ubu.lsi.server.GameServerImpl" 

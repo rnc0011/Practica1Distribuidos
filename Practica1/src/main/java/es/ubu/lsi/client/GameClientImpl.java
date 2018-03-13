@@ -23,7 +23,8 @@ public class GameClientImpl implements GameClient {
 	private String server;
 	private final static int port = 1500;
 	private String user;
-	private static int id = 0;
+	private static int nClients = 0;
+	private int id = 0;
 	private Socket socket;
 	private ObjectOutputStream salida;
 	private ObjectInputStream entrada;
@@ -38,7 +39,12 @@ public class GameClientImpl implements GameClient {
 	public GameClientImpl(String server, int port, String username) {
 		this.server = server;
 		this.user = username;
-		GameClientImpl.id++;
+		GameClientImpl.nClients++;
+		this.id = GameClientImpl.nClients;
+	}
+	
+	private int getId() {
+		return this.id;
 	}
 
 	/**
@@ -54,8 +60,8 @@ public class GameClientImpl implements GameClient {
 			// servidor
 			socket = new Socket(server, port);
 			salida = new ObjectOutputStream(socket.getOutputStream());
-			entrada = new ObjectInputStream(socket.getInputStream());
-			salida.writeUTF("El usuario " + user + "se ha conectado.");
+			System.out.println("Enviado nick.");
+			salida.writeUTF("Nuevo usuario conectado.");
 
 			// Se crea el listener y se arranca el hilo
 			GameClientListener listener = new GameClientListener();
@@ -123,19 +129,19 @@ public class GameClientImpl implements GameClient {
 		String jugada = scanner.nextLine();
 
 		if (jugada.equalsIgnoreCase(ElementType.PAPEL.toString())) {
-			elemento = new GameElement(id, ElementType.PAPEL);
+			elemento = new GameElement(cliente.getId(), ElementType.PAPEL);
 			cliente.sendElement(elemento);
 		} else if (jugada.equalsIgnoreCase(ElementType.PIEDRA.toString())) {
-			elemento = new GameElement(id, ElementType.PIEDRA);
+			elemento = new GameElement(cliente.getId(), ElementType.PIEDRA);
 			cliente.sendElement(elemento);
 		} else if (jugada.equalsIgnoreCase(ElementType.TIJERA.toString())) {
-			elemento = new GameElement(id, ElementType.TIJERA);
+			elemento = new GameElement(cliente.getId(), ElementType.TIJERA);
 			cliente.sendElement(elemento);
 		} else if (jugada.equalsIgnoreCase(ElementType.LOGOUT.toString())) {
-			elemento = new GameElement(id, ElementType.LOGOUT);
+			elemento = new GameElement(cliente.getId(), ElementType.LOGOUT);
 			cliente.sendElement(elemento);
 		} else if (jugada.equalsIgnoreCase(ElementType.SHUTDOWN.toString())) {
-			elemento = new GameElement(id, ElementType.SHUTDOWN);
+			elemento = new GameElement(cliente.getId(), ElementType.SHUTDOWN);
 			cliente.sendElement(elemento);
 		} else {
 			System.out.println("La jugada no es válida.");
@@ -159,15 +165,20 @@ public class GameClientImpl implements GameClient {
 		 */
 		@Override
 		public void run() {
+			String aux;
 			while (true) {
 				try {
-					System.out.println("El servidor dice: " + entrada.readObject().toString());
-				} catch (ClassNotFoundException e1) {
+					aux =entrada.readObject().toString();
+					if(aux != null) {
+						System.out.println("El servidor dice: " + entrada.readObject().toString());
+					}
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e1) {
 					e1.printStackTrace();
+				} finally {
 					disconnect();
-				} catch (IOException e2) {
-					e2.printStackTrace();
-					disconnect();
+					System.exit(1);
 				}
 			}
 		}
