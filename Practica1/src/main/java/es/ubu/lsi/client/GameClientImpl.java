@@ -61,7 +61,7 @@ public class GameClientImpl implements GameClient {
 			socket = new Socket(server, port);
 			salida = new ObjectOutputStream(socket.getOutputStream());
 			System.out.println("Enviado nick.");
-			salida.writeUTF("Nuevo usuario conectado.");
+			salida.writeUTF("El usuario"+ user + "se ha conectado.");
 
 			// Se crea el listener y se arranca el hilo
 			GameClientListener listener = new GameClientListener();

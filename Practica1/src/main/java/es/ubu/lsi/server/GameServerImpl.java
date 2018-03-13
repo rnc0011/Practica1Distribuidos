@@ -1,6 +1,7 @@
 package es.ubu.lsi.server;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,7 +64,7 @@ public class GameServerImpl implements GameServer {
 	 */
 	public void startup() {
 		ChatServerThreadForClient chat = null;
-		ObjectInputStream entrada;
+		InputStreamReader entrada;
 		int nuevaSala;
 		try {
 			serverSocket = new ServerSocket(port);
@@ -73,10 +74,9 @@ public class GameServerImpl implements GameServer {
 					System.out.println("Servidor en espera...");
 					clientSocket = serverSocket.accept();
 					
-					entrada = new ObjectInputStream(clientSocket.getInputStream());
+					entrada = new InputStreamReader(clientSocket.getInputStream());
 					nuevaSala = this.calcularSala();
-					System.out.println("El siguiente cliente se ha conectado:");
-					System.out.println(entrada.readUTF());
+					System.out.println(entrada.read());
 					socketClientes.add(clientSocket);
 					chat = new ChatServerThreadForClient(clientSocket, nuevaSala);
 					
@@ -175,19 +175,10 @@ public class GameServerImpl implements GameServer {
 	public class ChatServerThreadForClient extends Thread {
 		private int idRoom;
 		private Socket clientSocket;
-		private ObjectOutputStream salida;
 		private ObjectInputStream entrada;
 		
 		private ChatServerThreadForClient(Socket clientSocket,int idRoom) {
 			this.clientSocket = clientSocket;
-			try {
-				this.entrada = new ObjectInputStream(this.clientSocket.getInputStream());
-				this.salida = new ObjectOutputStream(this.clientSocket.getOutputStream());
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
-			
 			this.idRoom = idRoom;
 		}
 		/**
@@ -205,6 +196,7 @@ public class GameServerImpl implements GameServer {
 		public void run() {
 			while (true) {
 				try {
+					entrada = new ObjectInputStream(this.clientSocket.getInputStream());
 					if (jugada == null) {
 						jugada = (GameElement) this.entrada.readObject();
 					}else {
@@ -214,6 +206,8 @@ public class GameServerImpl implements GameServer {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
+				}finally {
+					System.exit(1);
 				}
 			}
 		}
